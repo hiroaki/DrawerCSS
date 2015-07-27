@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head>
+<script src="drawer-css.js"></script>
+<style>
+#container { width:240px; height:120px; background-color:lightblue; }
+#contents {  background-color:lightgreen; }
+</style>
+</head><body onclick="drawer.toggle();">
+  <div id="container">
+    <div id="menu">
+      <h1>menu</h1>
+      <ul>
+        <li>one</li>
+        <li>two</li>
+        <li>three</li>
+      </ul>
+    </div>
+    <div id="contents">
+      <h1>CONTENTS</h1>
+      <p>contents</p>
+    </div>
+  </div>
+  <script>
+    drawer = new DrawerCSS('contents', 'menu');
+  </script>
+</body></html>

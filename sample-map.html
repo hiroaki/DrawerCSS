@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/>
+<title>maps.gpx</title>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<style type="text/css">
+#container { background-color: lightyellow; width: 440px; height: 280px; }
+#drawer { background-color: thistle; }
+#contents { background-color: lightblue; width: 100%; height: 100%; }
+</style>
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="drawer-css.js"></script>
+<script>
+google.maps.event.addDomListener(window, 'load', function (){
+    new google.maps.Map(document.getElementById('contents'), {
+        zoom: 5,
+        center: new google.maps.LatLng(35.6841306, 139.774103),
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+});
+</script>
+</head><body>
+
+<div id="container">
+
+  <nav id="drawer">
+      <h1>drawer</h1>
+      <ul>
+        <li>list 1</li>
+        <li>list 2</li>
+        <li>list 3</li>
+        <li>list 4</li>
+        <li>list 5</li>
+        <li>list 6</li>
+        <li>list 7</li>
+        <li>list 8</li>
+        <li>list 9</li>
+        <li>list 10</li>
+        <li>list 11</li>
+        <li>list 12</li>
+        <li>list 13</li>
+        <li>list 14</li>
+        <li>list 15</li>
+        <li>list 16</li>
+        <li>list 17</li>
+        <li>list 18</li>
+        <li>list 19</li>
+        <li>list 20</li>
+        <li>list 21</li>
+        <li>list 22</li>
+        <li>list 23</li>
+        <li>list 24</li>
+        <li>list 25</li>
+      </ul>
+  </nav>
+
+  <div id="contents"></div>
+
+</div>
+
+<hr/><!-- ================== -->
+<form name="option">
+    <div>
+        effect: 
+        <input type="radio" name="effect" value="slide" checked="checked" /> slide
+        <input type="radio" name="effect" value="compress" /> compress
+    </div>
+    <div>
+        side: 
+        <input type="radio" name="side" value="TOP" /> TOP
+        <input type="radio" name="side" value="RIGHT" /> RIGHT
+        <input type="radio" name="side" value="BOTTOM" /> BOTTOM
+        <input type="radio" name="side" value="LEFT" checked="checked" /> LEFT
+    </div>
+    <div>
+        span: <input type="text" name="span" value="80%" />
+    </div>
+</form>
+<script>
+    var drr, toggler;
+    google.maps.event.addDomListener(document.forms['option'], 'change', function (){
+        var effect = this.elements['effect'].value;
+        var side   = this.elements['side'].value;
+        var span   = this.elements['span'].value;
+        drr = new DrawerCSS('contents', 'drawer', {effect: effect, side: side, span: span});
+        drr.close();
+        console.log('applied: '+effect+', '+side+', '+span);
+        if ( toggler ) {
+            google.maps.event.removeListener(toggler);
+        }
+        toggler = google.maps.event.addDomListener(document.getElementById('contents'), 'click', function (){
+            this.toggle();
+        }.bind(drr));
+    });
+    google.maps.event.trigger(document.forms['option'], 'change');
+</script>
+</body></html>
