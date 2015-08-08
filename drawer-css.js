@@ -1,7 +1,7 @@
 function DrawerCSS(){
   this.initialize.apply(this, arguments);
 }
-DrawerCSS.VERSION = '0.1.4';
+DrawerCSS.VERSION = '0.1.5';
 DrawerCSS._vendorT = ['webkitT', 'mozT', 'oT', 'msT', 't'];
 DrawerCSS.getDimensions = function(element) {
   // getDimensions by prototype.js 1.6.0.3
@@ -59,11 +59,9 @@ DrawerCSS.prototype = {
   },
   reset: function() {
     this.destroy();
-    this.$main.parentNode.style.overflow = 'hidden';
     this.$main.parentNode.style.position = 'relative';
     this.$main.style.width    = '100%';
     this.$main.style.height   = '100%';
-    this.$main.style.overflow = 'hidden';
     this[{ slide: '_init_slide',
         compress: '_init_compress'
     }[this.effect]].call(this);
@@ -81,7 +79,6 @@ DrawerCSS.prototype = {
       this.$main.style[DrawerCSS._vendorT[p] +'ransitionDelay'] = '';
       this.$main.style[DrawerCSS._vendorT[p] +'ransitionTimingFunction'] = '';
     }
-    this.$main.parentNode.style.overflow = '';
     this.$main.parentNode.style.position = '';
 
     this.$main.style.position   = '';
@@ -91,7 +88,6 @@ DrawerCSS.prototype = {
     this.$main.style.right      = '';
     this.$main.style.bottom     = '';
     this.$main.style.left       = '';
-    this.$main.style.overflow   = '';
 
     this.$sub.style.position    = '';
     this.$sub.style.width       = '';
@@ -100,7 +96,6 @@ DrawerCSS.prototype = {
     this.$sub.style.right       = '';
     this.$sub.style.bottom      = '';
     this.$sub.style.left        = '';
-    this.$sub.style.overflow    = '';
   },
   _init_slide: function() {
     var p;
@@ -215,10 +210,8 @@ DrawerCSS.prototype = {
       RIGHT: 'left',
       BOTTOM: 'top'
     }[this.side]] = '-' + this.span;
-    this.$sub.style.overflow = 'auto';
   },
   _open_compress: function (){
-    this.$sub.style.overflow = 'auto';
     if ( false ) {
       void(0);
     } else if ( this.side == 'LEFT' ) {
@@ -248,7 +241,6 @@ DrawerCSS.prototype = {
     this[{ slide: '_close_slide',
         compress: '_close_compress'
     }[this.effect]].call(this);
-    this.$sub.style.overflow = 'hidden';
 
     if ( this._events['close'] ) {
       try {

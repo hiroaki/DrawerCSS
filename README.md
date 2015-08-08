@@ -6,11 +6,12 @@ This is a simple JavaScript implementation to create a drawer element, by using 
 
 ```
 <!DOCTYPE html>
-<html><head>
+<html><head><title>DrawerCSS</title>
 <script src="drawer-css.js"></script>
 <style>
-#container { width:240px; height:120px; background-color:lightblue; }
-#contents { background-color:lightgreen; }
+#container { width:240px; height:120px; background-color:lightblue; overflow: auto; }
+#contents {  background-color:lightgreen; }
+#menu { overflow: auto; }
 </style>
 </head><body onclick="drawer.toggle();">
   <div id="container">
@@ -23,7 +24,7 @@ This is a simple JavaScript implementation to create a drawer element, by using 
       </ul>
     </div>
     <div id="contents">
-      <h1>CONTENTS</h1>
+      <h1>DrawerCSS</h1>
       <p>contents</p>
     </div>
   </div>
