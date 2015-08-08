@@ -4,8 +4,8 @@
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <style type="text/css">
 #container { background-color: lightyellow; width: 440px; height: 280px; }
-#drawer { background-color: thistle; overflow: auto; }
-#contents { background-color: lightblue; width: 100%; height: 100%; overflow: auto; }
+#base { background-color: lightblue; width: 100%; height: 100%; }
+#drawer { background-color: thistle; }
 </style>
 <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
 <script src="drawer-css.js"></script>
@@ -42,13 +42,17 @@
         <li>list 25</li>
       </ul>
     </nav>
-    <div id="contents">
+    <div id="base">
+      <h1>base</h1>
+      <div>
         Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,
+      </div>
     </div>
 </div>
 
 <hr/><!-- ================== -->
 <form name="option">
+    <h3>DrawerCSS options</h3>
     <div>
         effect: 
         <input type="radio" name="effect" value="slide" checked="checked" /> slide
@@ -64,20 +68,45 @@
     <div>
         span: <input type="text" name="span" value="80%" />
     </div>
+    <h3>HTML style</h3>
+    <div>
+        #container.style.overflow = 
+        <input type="radio" name="cont_overflow" value="" checked="checked" /> (none)
+        <input type="radio" name="cont_overflow" value="auto" /> auto
+        <input type="radio" name="cont_overflow" value="hidden" /> hidden
+        <input type="radio" name="cont_overflow" value="scroll" /> scroll
+    </div>
+    <div>
+        #base.style.overflow = 
+        <input type="radio" name="base_overflow" value="" /> (none)
+        <input type="radio" name="base_overflow" value="auto" checked="checked" /> auto
+        <input type="radio" name="base_overflow" value="hidden" /> hidden
+        <input type="radio" name="base_overflow" value="scroll" /> scroll
+    </div>
+    <div>
+        #drawer.style.overflow = 
+        <input type="radio" name="drawer_overflow" value="" /> (none)
+        <input type="radio" name="drawer_overflow" value="auto" checked="checked" /> auto
+        <input type="radio" name="drawer_overflow" value="hidden" /> hidden
+        <input type="radio" name="drawer_overflow" value="scroll" /> scroll
+    </div>
 </form>
 <script>
     var drr, toggler;
     google.maps.event.addDomListener(document.forms['option'], 'change', function (){
-        var effect = this.elements['effect'].value;
-        var side   = this.elements['side'].value;
-        var span   = this.elements['span'].value;
-        drr = new DrawerCSS('contents', 'drawer', {effect: effect, side: side, span: span});
+        var effect  = this.elements['effect'].value;
+        var side    = this.elements['side'].value;
+        var span    = this.elements['span'].value;
+        console.log('applied: '+ effect +', '+ side +', '+ span);
+        drr = new DrawerCSS('base', 'drawer', {effect: effect, side: side, span: span});
         drr.close();
-        console.log('applied: '+effect+', '+side+', '+span);
+        document.getElementById('container').style.overflow = this.elements['cont_overflow'].value;
+        document.getElementById('base').style.overflow = this.elements['base_overflow'].value;
+        document.getElementById('drawer').style.overflow = this.elements['drawer_overflow'].value;
         if ( toggler ) {
             google.maps.event.removeListener(toggler);
         }
-        toggler = google.maps.event.addDomListener(document.getElementById('contents'), 'click', function (){
+        toggler = google.maps.event.addDomListener(document.getElementById('base'), 'click', function (){
             this.toggle();
         }.bind(drr));
     });
