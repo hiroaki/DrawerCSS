@@ -1,7 +1,7 @@
 function DrawerCSS(){
   this.initialize.apply(this, arguments);
 }
-DrawerCSS.VERSION = '0.1.5';
+DrawerCSS.VERSION = '0.2.0';
 DrawerCSS._vendorT = ['webkitT', 'mozT', 'oT', 'msT', 't'];
 DrawerCSS.getDimensions = function(element) {
   // getDimensions by prototype.js 1.6.0.3
@@ -57,6 +57,13 @@ DrawerCSS.prototype = {
 
     this.reset();
   },
+  active_span: function (){
+    var span_function = this.span;
+    if ( typeof this.span != 'function' ) {
+      span_function = (function() { return this }).bind(this.span);
+    }
+    return span_function;
+  },
   reset: function() {
     this.destroy();
     this.$main.parentNode.style.position = 'relative';
@@ -109,13 +116,13 @@ DrawerCSS.prototype = {
       void(0);
     } else if ( this.side == 'TOP' ) {
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.span;
+      this.$sub.style.height  = this.active_span().call(this);
       this.$sub.style.top     = 0;
       this.$sub.style.right   = '';
       this.$sub.style.bottom  = '';
       this.$sub.style.left    = 0;
     } else if ( this.side == 'RIGHT' ) {
-      this.$sub.style.width   = this.span;
+      this.$sub.style.width   = this.active_span().call(this);
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
       this.$sub.style.right   = 0;
@@ -123,13 +130,13 @@ DrawerCSS.prototype = {
       this.$sub.style.left    = '';
     } else if ( this.side == 'BOTTOM' ) {
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.span;
+      this.$sub.style.height  = this.active_span().call(this);
       this.$sub.style.top     = '';
       this.$sub.style.right   = 0;
       this.$sub.style.bottom  = 0;
       this.$sub.style.left    = '';
     } else if ( this.side == 'LEFT' ) {
-      this.$sub.style.width   = this.span;
+      this.$sub.style.width   = this.active_span().call(this);
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
       this.$sub.style.right   = '';
@@ -152,24 +159,24 @@ DrawerCSS.prototype = {
     } else if ( this.side == 'TOP' ) {
       this.$main.style.bottom = 0;
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.span;
+      this.$sub.style.height  = this.active_span().call(this);
       this.$sub.style.top     = 0;
       this.$sub.style.left    = 0;
     } else if ( this.side == 'RIGHT' ) {
       this.$main.style.left   = 0;
-      this.$sub.style.width   = this.span;
+      this.$sub.style.width   = this.active_span().call(this);
       this.$sub.style.height  = '100%';
       this.$sub.style.bottom  = 0;
       this.$sub.style.right   = 0;
     } else if ( this.side == 'BOTTOM' ) {
       this.$main.style.top    = 0;
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.span;
+      this.$sub.style.height  = this.active_span().call(this);
       this.$sub.style.bottom  = 0;
       this.$sub.style.right   = 0;
     } else if ( this.side == 'LEFT' ) {
       this.$main.style.right  = 0;
-      this.$sub.style.width   = this.span;
+      this.$sub.style.width   = this.active_span().call(this);
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
       this.$sub.style.left    = 0;
@@ -209,27 +216,31 @@ DrawerCSS.prototype = {
       TOP: 'bottom',
       RIGHT: 'left',
       BOTTOM: 'top'
-    }[this.side]] = '-' + this.span;
+    }[this.side]] = '-' + this.active_span().call(this);
   },
   _open_compress: function (){
     if ( false ) {
       void(0);
     } else if ( this.side == 'LEFT' ) {
+      this.$sub.style.width = this.active_span().call(this);
       this.$main.style.width
         = DrawerCSS.getDimensions(this.$main).width
         - DrawerCSS.getDimensions(this.$sub ).width
         + 'px';
     } else if ( this.side == 'BOTTOM' ) {
+      this.$sub.style.height = this.active_span().call(this);
       this.$main.style.height
         = DrawerCSS.getDimensions(this.$main).height
         - DrawerCSS.getDimensions(this.$sub ).height
         + 'px';
     } else if ( this.side == 'TOP' ) {
+      this.$sub.style.height = this.active_span().call(this);
       this.$main.style.height
         = DrawerCSS.getDimensions(this.$main).height
         - DrawerCSS.getDimensions(this.$sub ).height
         + 'px';
     } else if ( this.side == 'RIGHT' ) {
+      this.$sub.style.width = this.active_span().call(this);
       this.$main.style.width
         = DrawerCSS.getDimensions(this.$main).width
         - DrawerCSS.getDimensions(this.$sub ).width
