@@ -68,14 +68,18 @@ DrawerCSS.prototype = {
     this.reset();
   },
   active_span: function() {
+    var span = this.span;
+    if ( typeof this.span == 'function' ) {
+      span = this.span.call(this);
+    }
     if ( this.maxSpan ) {
-      if ( this.span.toString().match(/%$/) ) {
-        return this._span_limited_by_percent();
-      } else if ( this.span.toString().match(/\d+\s*px$/) ) {
-        return this._span_limited_by_pixel();
+      if ( span.toString().match(/%$/) ) {
+        span = this._span_limited_by_percent();
+      } else if ( span.toString().match(/\d+\s*px$/) ) {
+        span = this._span_limited_by_pixel();
       }
     }
-    return this.span;
+    return span;
   },
   _span_limited_by_percent: function() {
     var attribute = {LEFT:'width',TOP:'height',RIGHT:'width',BOTTOM:'height'}[this.side],
