@@ -1,7 +1,7 @@
 function DrawerCSS(){
   this.initialize.apply(this, arguments);
 }
-DrawerCSS.VERSION = '0.3.0';
+DrawerCSS.VERSION = '0.4.0';
 DrawerCSS._vendorT = ['webkitT', 'mozT', 'oT', 'msT', 't'];
 DrawerCSS.getDimensions = function(element) {
   // getDimensions by prototype.js 1.6.0.3
