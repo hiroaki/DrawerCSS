@@ -28,7 +28,8 @@ DrawerCSS.defaults = {
   timingFunction: 'ease-in-out',
   effect: 'slide',
   side: 'LEFT',
-  span: '80%'
+  span: '80%',
+  maxSpan: null
 };
 DrawerCSS.prototype = {
   initialize: function (main_id, sub_id, options){
@@ -44,6 +45,14 @@ DrawerCSS.prototype = {
     this.effect = this.settings['effect'].toLowerCase();
     this.side = this.settings['side'].toUpperCase();
     this.span = this.settings['span'];
+    this.maxSpan = this.settings['maxSpan'];
+
+    if ( this.span.toString().match(/\d+$/) ) {
+      this.span = this.span +'px';
+    }
+    if ( this.maxSpan && this.maxSpan.toString().match(/\d+$/) ) {
+      this.maxSpan = this.maxSpan +'px';
+    }
 
     this._opened = false;
     this._events = {};
@@ -58,12 +67,56 @@ DrawerCSS.prototype = {
 
     this.reset();
   },
-  active_span: function (){
-    var span_function = this.span;
-    if ( typeof this.span != 'function' ) {
-      span_function = (function() { return this }).bind(this.span);
+  active_span: function() {
+    var span = this.span;
+    if ( typeof this.span == 'function' ) {
+      span = this.span.call(this);
     }
-    return span_function;
+    if ( this.maxSpan ) {
+      if ( span.toString().match(/%$/) ) {
+        span = this._span_limited_by_percent();
+      } else if ( span.toString().match(/\d+\s*px$/) ) {
+        span = this._span_limited_by_pixel();
+      }
+    }
+    return span;
+  },
+  _span_limited_by_percent: function() {
+    var attribute = {LEFT:'width',TOP:'height',RIGHT:'width',BOTTOM:'height'}[this.side],
+        base_width = DrawerCSS.getDimensions( this.getElementBase() )[attribute],
+        opening_span;
+    if ( ! this.maxSpan.toString().match(/px$/) ) {
+      console.error('the option "maxSpan" has to be specified as "px"');
+      return this.span;
+    }
+
+    opening_span = parseInt( base_width * parseInt(this.span) / 100 );
+    if ( parseInt(this.maxSpan) < opening_span ) {
+      opening_span = parseInt(this.maxSpan);
+    }
+    opening_span = opening_span +'px';
+
+    this.getElementDrawer().style[attribute] = opening_span;
+    return opening_span;
+  },
+  _span_limited_by_pixel: function() {
+    var attribute = {LEFT:'width',TOP:'height',RIGHT:'width',BOTTOM:'height'}[this.side],
+        base_width = DrawerCSS.getDimensions( this.getElementBase() )[attribute],
+        opening_span, limit_span;
+    if ( ! this.maxSpan.toString().match(/%$/) ) {
+      console.error('the option "maxSpan" has to be specified as "%"');
+      return this.span;
+    }
+    opening_span = parseInt( this.span );
+    limit_span   = parseInt( base_width * parseInt(this.maxSpan) / 100 );
+
+    if ( limit_span < opening_span ) {
+      opening_span = limit_span;
+    }
+    opening_span = opening_span +'px';
+
+    this.getElementDrawer().style[attribute] = opening_span;
+    return opening_span;
   },
   reset: function() {
     this.destroy();
@@ -121,7 +174,7 @@ DrawerCSS.prototype = {
       }
       this._origin = {attribute: 'bottom', value: this.$main.style.bottom};
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.active_span().call(this);
+      this.$sub.style.height  = this.active_span();
       this.$sub.style.top     = 0;
       this.$sub.style.right   = '';
       this.$sub.style.bottom  = '';
@@ -131,7 +184,7 @@ DrawerCSS.prototype = {
         this.$main.style.left = 0;
       }
       this._origin = {attribute: 'left', value: this.$main.style.left};
-      this.$sub.style.width   = this.active_span().call(this);
+      this.$sub.style.width   = this.active_span();
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
       this.$sub.style.right   = 0;
@@ -143,7 +196,7 @@ DrawerCSS.prototype = {
       }
       this._origin = {attribute: 'top', value: this.$main.style.top};
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.active_span().call(this);
+      this.$sub.style.height  = this.active_span();
       this.$sub.style.top     = '';
       this.$sub.style.right   = 0;
       this.$sub.style.bottom  = 0;
@@ -153,7 +206,7 @@ DrawerCSS.prototype = {
         this.$main.style.right = 0;
       }
       this._origin = {attribute: 'right', value: this.$main.style.right};
-      this.$sub.style.width   = this.active_span().call(this);
+      this.$sub.style.width   = this.active_span();
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
       this.$sub.style.right   = '';
@@ -176,24 +229,24 @@ DrawerCSS.prototype = {
     } else if ( this.side == 'TOP' ) {
       this.$main.style.bottom = 0;
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.active_span().call(this);
+      this.$sub.style.height  = this.active_span();
       this.$sub.style.top     = 0;
       this.$sub.style.left    = 0;
     } else if ( this.side == 'RIGHT' ) {
       this.$main.style.left   = 0;
-      this.$sub.style.width   = this.active_span().call(this);
+      this.$sub.style.width   = this.active_span();
       this.$sub.style.height  = '100%';
       this.$sub.style.bottom  = 0;
       this.$sub.style.right   = 0;
     } else if ( this.side == 'BOTTOM' ) {
       this.$main.style.top    = 0;
       this.$sub.style.width   = '100%';
-      this.$sub.style.height  = this.active_span().call(this);
+      this.$sub.style.height  = this.active_span();
       this.$sub.style.bottom  = 0;
       this.$sub.style.right   = 0;
     } else if ( this.side == 'LEFT' ) {
       this.$main.style.right  = 0;
-      this.$sub.style.width   = this.active_span().call(this);
+      this.$sub.style.width   = this.active_span();
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
       this.$sub.style.left    = 0;
@@ -233,31 +286,31 @@ DrawerCSS.prototype = {
       TOP: 'bottom',
       RIGHT: 'left',
       BOTTOM: 'top'
-    }[this.side]] = '-' + this.active_span().call(this);
+    }[this.side]] = '-' + this.active_span();
   },
   _open_compress: function (){
     if ( false ) {
       void(0);
     } else if ( this.side == 'LEFT' ) {
-      this.$sub.style.width = this.active_span().call(this);
+      this.$sub.style.width = this.active_span();
       this.$main.style.width
         = DrawerCSS.getDimensions(this.$main).width
         - DrawerCSS.getDimensions(this.$sub ).width
         + 'px';
     } else if ( this.side == 'BOTTOM' ) {
-      this.$sub.style.height = this.active_span().call(this);
+      this.$sub.style.height = this.active_span();
       this.$main.style.height
         = DrawerCSS.getDimensions(this.$main).height
         - DrawerCSS.getDimensions(this.$sub ).height
         + 'px';
     } else if ( this.side == 'TOP' ) {
-      this.$sub.style.height = this.active_span().call(this);
+      this.$sub.style.height = this.active_span();
       this.$main.style.height
         = DrawerCSS.getDimensions(this.$main).height
         - DrawerCSS.getDimensions(this.$sub ).height
         + 'px';
     } else if ( this.side == 'RIGHT' ) {
-      this.$sub.style.width = this.active_span().call(this);
+      this.$sub.style.width = this.active_span();
       this.$main.style.width
         = DrawerCSS.getDimensions(this.$main).width
         - DrawerCSS.getDimensions(this.$sub ).width
