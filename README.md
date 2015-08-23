@@ -42,28 +42,40 @@ This is a simple JavaScript implementation to create a drawer element, by using 
 
 # API reference
 
+
 ## Constructor
 
 constructor | description
 ------------|------------
 DrawerCSS( base_id:String, drawer_id:String, options?:Hash ) | Create an instance
 
-Note: If the element of *drawer_id* does not exist, it is going to be created. And it is possible to get its element by `getElementDrawer` instance method.
+If the element of *drawer_id* does not exist, it is going to be created. And it is possible to get its element by `getElementDrawer` instance method.
+
 
 ## Options
 
 property | type | description
 ---------|------|------------
 side | constant | Side of the drawer. *TOP*, *RIGHT*, *BOTTOM* or *LEFT*. Defalut is *LEFT*
-span | string or function | Span of the drawer pane. If specify the value by the function, then the span will be the return value of the function when the drawer opens. Default is *80%*
+span | string | Span of the drawer pane. Default is *80%*
+maxSpan| string | Limit of `span`, it is available when `span` is specified with "px" or "%". Default is *null* which means unlimited
 effect | constant | Effect of the base pane when open. *slide* or *compress*. Default is *slide*
 duration | float | Transition duration. Default is *0.3*
 delay | float | Transition delay. Default is *0.0*
 timingFunction | constant | Transition timing function. Default is *ease-in-out*
 
+The value of `maxSpan` is available in these cases:
+
+* `maxSpan` specified with "%" when `span` is "px"
+* `maxSpan` specified with "px" when `span` is "%"
+
+Other cases are not supported.
+
+
 ## Methods
 
-### Static Methods
+
+### Class Methods
 
 method | return value | description
 -------|--------------|------------
@@ -83,28 +95,6 @@ close( ) | this | Close the drawer
 toggle( ) | boolean | Open or close the drawer. It returns *true* if open, or *false*
 addHandler( name:String, handler:Function ) | this | Add *handler* to the *name* event. See also "Events" section below.
 
-To specify dynamic span:
-
-```
-new DrawerCSS('base', 'drawer', {
-  side: 'LEFT',
-  span: function() {
-    // Specify "80%" of the base element,
-    // but at most 600px.
-    var base_width   = DrawerCSS.getDimensions( this.getElementBase() ).width,
-        opening_span = parseInt( base_width * 80 / 100 );
-    if ( 600 < opening_span ) {
-      opening_span = 600;
-    }
-
-    // Workaround: adjust drawer size
-    this.getElementDrawer().style.width = opening_span +'px';
-
-    return opening_span +'px';
-  }
-});
-```
-
 
 ## Events
 
@@ -112,6 +102,7 @@ name | description
 -----|------------
 open | It is going to be fired when the drawer opens
 close | It is going to be fired when the drawer closes
+
 
 # Copyright and license
 
