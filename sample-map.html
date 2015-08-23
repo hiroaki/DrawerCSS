@@ -75,6 +75,9 @@ google.maps.event.addDomListener(window, 'load', function (){
     <div>
         span: <input type="text" name="span" value="80%" />
     </div>
+    <div>
+        maxSpan: <input type="text" name="maxSpan" value="" /> <span id="maxspanunit"></span>
+    </div>
     <h3>HTML style</h3>
     <div>
         #container.style.overflow = 
@@ -104,8 +107,17 @@ google.maps.event.addDomListener(window, 'load', function (){
         var effect  = this.elements['effect'].value;
         var side    = this.elements['side'].value;
         var span    = this.elements['span'].value;
-        console.log('applied: '+ effect +', '+ side +', '+ span);
-        drr = new DrawerCSS('base', 'drawer', {effect: effect, side: side, span: span});
+        var max     = this.elements['maxSpan'].value;
+        var $unit   = document.getElementById('maxspanunit');
+        if ( span.toString().match(/\d+\s*%\s*$/) ) {
+            $unit.innerHTML = 'this has to be specified with "px"';
+        } else if ( span.toString().match(/\d+\s*(px\s*)?$/) ) {
+            $unit.innerHTML = 'this has to be specified with "%"';
+        } else {
+            $unit.innerHTML = 'this is not supported when "span" is not "px" or "%"';
+        }
+        console.log('applied: '+ effect +', '+ side +', '+ span +', '+ max);
+        drr = new DrawerCSS('base', 'drawer', {effect: effect, side: side, span: span, maxSpan: max});
         drr.close();
         document.getElementById('container').style.overflow = this.elements['cont_overflow'].value;
         document.getElementById('base').style.overflow = this.elements['base_overflow'].value;
