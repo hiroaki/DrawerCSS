@@ -47,6 +47,7 @@ DrawerCSS.prototype = {
 
     this._opened = false;
     this._events = {};
+    this._origin = {};
 
     this.$main = document.getElementById(main_id);
     this.$sub  = document.getElementById(sub_id );
@@ -115,6 +116,10 @@ DrawerCSS.prototype = {
     if ( false ) {
       void(0);
     } else if ( this.side == 'TOP' ) {
+      if ( ! this.$main.style.bottom ) {
+        this.$main.style.bottom = 0;
+      }
+      this._origin = {attribute: 'bottom', value: this.$main.style.bottom};
       this.$sub.style.width   = '100%';
       this.$sub.style.height  = this.active_span().call(this);
       this.$sub.style.top     = 0;
@@ -122,6 +127,10 @@ DrawerCSS.prototype = {
       this.$sub.style.bottom  = '';
       this.$sub.style.left    = 0;
     } else if ( this.side == 'RIGHT' ) {
+      if ( ! this.$main.style.left ) {
+        this.$main.style.left = 0;
+      }
+      this._origin = {attribute: 'left', value: this.$main.style.left};
       this.$sub.style.width   = this.active_span().call(this);
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
@@ -129,6 +138,10 @@ DrawerCSS.prototype = {
       this.$sub.style.bottom  = '';
       this.$sub.style.left    = '';
     } else if ( this.side == 'BOTTOM' ) {
+      if ( ! this.$main.style.top ) {
+        this.$main.style.top = 0;
+      }
+      this._origin = {attribute: 'top', value: this.$main.style.top};
       this.$sub.style.width   = '100%';
       this.$sub.style.height  = this.active_span().call(this);
       this.$sub.style.top     = '';
@@ -136,6 +149,10 @@ DrawerCSS.prototype = {
       this.$sub.style.bottom  = 0;
       this.$sub.style.left    = '';
     } else if ( this.side == 'LEFT' ) {
+      if ( ! this.$main.style.right ) {
+        this.$main.style.right = 0;
+      }
+      this._origin = {attribute: 'right', value: this.$main.style.right};
       this.$sub.style.width   = this.active_span().call(this);
       this.$sub.style.height  = '100%';
       this.$sub.style.top     = 0;
@@ -266,9 +283,7 @@ DrawerCSS.prototype = {
     return this;
   },
   _close_slide: function() {
-    this.$main.style[{
-      TOP: 'bottom', RIGHT: 'left', BOTTOM: 'top', LEFT: 'right'
-    }[this.side]] = '';
+    this.$main.style[this._origin['attribute']] = this._origin['value'];
   },
   _close_compress: function() {
     this.$main.style[{
